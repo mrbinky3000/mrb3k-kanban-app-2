@@ -21,6 +21,7 @@ const common = {
 // Default configuration
 if (TARGET === 'start' || !TARGET) {
 	module.exports = merge(common, {
+		devTool: 'eval-source-map',
 		devServer: {
 			contentBase: PATHS.build,
 
@@ -38,6 +39,18 @@ if (TARGET === 'start' || !TARGET) {
 			// Parse host and port from env so this is easy to customize.
 			host: process.env.HOST,
 			port: process.env.PORT
+		},
+		module: {
+			loaders: [
+				{
+					// Test expects a RegExp! Note the slashes!
+					test: /\.css$/,
+					loaders: ['style','css'],
+
+					// Include accepts either a path or an array of paths.
+					include : PATHS.app
+				}
+			],
 		},
 		plugins: [
 			new webpack.HotModuleReplacementPlugin()
