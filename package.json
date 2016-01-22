@@ -1,0 +1,23 @@
+{
+  "name": "mrb3k-kanban-app-2",
+  "version": "1.0.0",
+  "description": "This is just me following along with version 2.0.0-rc3 of the book \"SurviveJS - Webpack and React\"",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrbinky3000/mrb3k-kanban-app-2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mrbinky3000/mrb3k-kanban-app-2/issues"
+  },
+  "homepage": "https://github.com/mrbinky3000/mrb3k-kanban-app-2#readme",
+  "devDependencies": {
+    "webpack": "^1.12.11"
+  }
+}
