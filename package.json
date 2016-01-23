@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mrbinky3000/mrb3k-kanban-app-2.git"
+    "url": "git@github.com:mrbinky3000/mrb3k-kanban-app-2.git"
   },
   "keywords": [],
   "author": "",
