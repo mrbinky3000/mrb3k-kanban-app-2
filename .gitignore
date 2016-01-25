@@ -34,3 +34,6 @@ node_modules
 
 #ignore the build directory
 build/
+
+#ignore webpack stats
+/stats.json
