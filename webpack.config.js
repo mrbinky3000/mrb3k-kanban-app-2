@@ -1,8 +1,11 @@
 const path = require('path');
 const merge = require('webpack-merge');
-const TARGET = process.env.npm_lifecycle_event;
 const webpack = require('webpack');
 
+// Load *package.json* so we can use `dependencies` from there
+const pkg = require('./package.json');
+
+const TARGET = process.env.npm_lifecycle_event;
 const PATHS = {
 	app: path.join(__dirname, 'app'),
 	build: path.join(__dirname, 'build')
@@ -21,8 +24,8 @@ const common = {
 		extensions: ['', '.js', '.jsx']
 	},
 	output: {
-		path: PATHS.build,
-		filename: 'bundle.js'
+		// Output using entry name
+		filename: '[name].js'
 	},
 	module: {
 		loaders: [
@@ -74,7 +77,27 @@ if (TARGET === 'start' || !TARGET) {
 
 if (TARGET === 'build') {
 	module.exports = merge(common, {
+		// Define entry points needed for splitting
+		entry: {
+			app: PATHS.app,
+			vendor:
+				Object.keys(pkg.dependencies).filter(function(v) {
+					// Exclude alt-utils as it won't work with this setup
+					// due to the way the package has been designed
+					// (no package.json main).
+					return v !== 'alt-utils';
+				})
+		},
+		output: {
+			path: PATHS.build,
+			filename: '[name].[chunkhash].js',
+			chunkFilename: '[chunkhash].js'
+		},
 		plugins: [
+			// Extract vendor and manifest files
+			new webpack.optimize.CommonsChunkPlugin({
+				names: ['vendor', 'manifest']
+			}),
 			// Setting DefinePlugin affects React library size!
 			new webpack.DefinePlugin({
 				'process.env.NODE_ENV': JSON.stringify('production')
