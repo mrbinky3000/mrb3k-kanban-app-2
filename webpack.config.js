@@ -11,6 +11,10 @@ const PATHS = {
 	build: path.join(__dirname, 'build')
 };
 
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+const Clean = require('clean-webpack-plugin');
+
 process.env.BABEL_ENV = TARGET;
 
 const common = {
@@ -44,7 +48,15 @@ const common = {
 				include: PATHS.app
 			}
 		]
-	}
+	},
+	plugins: [
+		new HtmlWebpackPlugin({
+			template: 'node_modules/html-webpack-template/index.html',
+			title: 'Kanban app',
+			appMountId: 'app',
+			inject: false
+		})
+	]
 };
 
 // Default configuration
@@ -94,6 +106,9 @@ if (TARGET === 'build') {
 			chunkFilename: '[chunkhash].js'
 		},
 		plugins: [
+			new Clean([PATHS.build], {
+				verbose: false // Don't write logs to console
+			}),
 			// Extract vendor and manifest files
 			new webpack.optimize.CommonsChunkPlugin({
 				names: ['vendor', 'manifest']
