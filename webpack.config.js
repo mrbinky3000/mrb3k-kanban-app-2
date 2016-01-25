@@ -15,6 +15,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const Clean = require('clean-webpack-plugin');
 
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+
 process.env.BABEL_ENV = TARGET;
 
 const common = {
@@ -33,11 +35,6 @@ const common = {
 	},
 	module: {
 		loaders: [
-			{
-				test: /\.css$/,
-				loaders: ['style', 'css'],
-				include: PATHS.app
-			},
 			// Set up jsx. This accepts js too thanks to RegExp
 			{
 				test: /\.jsx?$/,
@@ -81,6 +78,16 @@ if (TARGET === 'start' || !TARGET) {
 			host: process.env.HOST,
 			port: process.env.PORT
 		},
+		module: {
+			loaders: [
+				//Define development specific CSS setup
+				{
+					test: /\.css$/,
+					loaders: ['style', 'css'],
+					include: PATHS.app
+				}
+			]
+		},
 		plugins: [
 			new webpack.HotModuleReplacementPlugin()
 		]
@@ -105,14 +112,33 @@ if (TARGET === 'build') {
 			filename: '[name].[chunkhash].js',
 			chunkFilename: '[chunkhash].js'
 		},
+		module: {
+			loaders: [
+				// Extract CSS during build
+				{
+					test: /\.css$/,
+					// If you want to pass more loaders to the ExtractTextPlugin,
+					// you should use ! syntax. Example:
+					// ExtractTextPlugin.extract('style', 'css!autoprefixer-loader')
+					loader: ExtractTextPlugin.extract('style','css'),
+					include: PATHS.app
+				}
+			]
+		},
 		plugins: [
+			// Clean out the build directory
 			new Clean([PATHS.build], {
 				verbose: false // Don't write logs to console
 			}),
+
+			// output extracted CSS to a file
+			new ExtractTextPlugin('styles.[chunkhash].css'),
+
 			// Extract vendor and manifest files
 			new webpack.optimize.CommonsChunkPlugin({
 				names: ['vendor', 'manifest']
 			}),
+
 			// Setting DefinePlugin affects React library size!
 			new webpack.DefinePlugin({
 				'process.env.NODE_ENV': JSON.stringify('production')
@@ -121,6 +147,8 @@ if (TARGET === 'build') {
 				// developement target to force NODE_ENV to development mode
 				// no matter what
 			}),
+
+			// minify code
 			new webpack.optimize.UglifyJsPlugin({
 				compress: {
 					warnings: false
