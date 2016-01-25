@@ -13,7 +13,7 @@ const noteSource = {
 const noteTarget = {
 	hover(targetProps, monitor) {
 		const targetId = targetProps.id;
-		const sourceProps = montior.getItem();
+		const sourceProps = monitor.getItem();
 		const sourceId = sourceProps.id;
 
 		if(sourceId !== targetId) {
