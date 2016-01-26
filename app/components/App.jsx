@@ -24,7 +24,7 @@ export default class App extends React.Component {
 				</AltContainer>
 			</div>
 		);
-	};
+	}
 
 	addLane() {
 		LaneActions.create({name: 'New lane'});
