@@ -35,6 +35,14 @@ const common = {
 		filename: '[name].js'
 	},
 	module: {
+		preLoaders: [
+			{
+				test: /\.js?/,
+				loaders: ['jshint'],
+				// define an include so we check just the files we need
+				include: PATHS.app
+			}
+		],
 		loaders: [
 			// Set up jsx. This accepts js too thanks to RegExp
 			{
